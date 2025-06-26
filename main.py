@@ -32,6 +32,7 @@ def download():
             "quiet": False,
             "verbose": True,
             "nopart": True,
+            "cookiefile": os.path.join(os.getcwd(), "cookies.txt"),
         }
 
         try:
