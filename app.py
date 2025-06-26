@@ -31,7 +31,8 @@ def download(video_url):
                 "preferredcodec": "mp3",
                 "preferredquality": "192",
             }],
-            "quiet": True,
+            "quiet": False,
+            "verbose": True,
             "nopart": True,
         }
 
