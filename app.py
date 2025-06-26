@@ -1,4 +1,4 @@
-from flask import Flask, send_file
+from flask import Flask, send_file, request
 import yt_dlp
 import tempfile
 import os
@@ -13,10 +13,11 @@ def index():
     <pre>http://localhost:5000/https://www.youtube.com/watch?v=dQw4w9WgXcQ</pre>
     """
 
-@app.route("/<path:video_url>")
-def download(video_url):
-    if not video_url.startswith("http"):
-        video_url = "https://" + video_url
+@app.route("/mp3")
+def download():
+    video_url = request.args.get("url")
+    if not video_url or not video_url.startswith("http"):
+        return "Invalid or missing URL", 400
 
     with tempfile.TemporaryDirectory() as tmpdir:
         ydl_opts = {
