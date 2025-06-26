@@ -28,17 +28,22 @@ def download(video_url):
                 'preferredquality': '192',
             }],
             'quiet': True,
-            'nopart': True,  # Disable use of .part files (temp download files)
+            'nopart': True,
         }
 
         try:
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 info = ydl.extract_info(video_url, download=True)
-                filename = ydl.prepare_filename(info).replace('.webm', '.mp3').replace('.m4a', '.mp3')
-        except Exception as e:
-            return f"Download failed: {str(e)}", 500
 
-        return send_file(filename, as_attachment=True)
+                # Find the actual .mp3 file created in tmpdir
+                for file in os.listdir(tmpdir):
+                    if file.endswith('.mp3'):
+                        return send_file(os.path.join(tmpdir, file), as_attachment=True)
+
+                return "MP3 file not found after download.", 500
+
+        except Exception as e:
+            return f"<h3>Download failed:</h3><pre>{str(e)}</pre>", 500
 
 if __name__ == '__main__':
     app.run(debug=True)
